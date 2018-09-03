@@ -27,6 +27,8 @@
 #include <iterator>
 #include <algorithm>
 
+#include <cstring>
+
 #include <iostream>
 
 
@@ -47,11 +49,21 @@ constexpr char PUNCTUAION[] {"?!.,;:()/\"\\"};
 }
 
 inline std::string wordToPig(const std::string &englishWord);
+//inline constexpr char *wordToPig(char *englishWord);
+#if __cplusplus >= 201703L
+inline std::string_view wordToPigSV(std::string_view englishWord);
+#endif
+
 inline std::string wordToPigPunctuation(const std::string &englishWord);
-inline std::string multipleWordsToPig(const std::string &englishWords);
+
+inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
+
+inline std::string wordsToPig(const std::string &englishWords);
 inline std::string sentenceToPig(const std::string &englishSentence);
 
 inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels = 1);
+
+
 }
 
 namespace anslatortray
@@ -66,18 +78,10 @@ std::string wordToPig(const std::string &englishWord)
             return englishWord + "way";
         else
         {
-            std::string noPrefix {englishWord.substr(result)};
-
-            std::string suffix {};
-
-            for (std::string::size_type i = 0; i != result; i++)
-            {
-                suffix += englishWord[i];
-            }
-
-            suffix += "ay";
-
-            std::string finished {noPrefix + suffix};
+            //word without prefix + word until 1st vowel + "ay"
+            std::string finished {englishWord.substr(result)};
+            finished += englishWord.substr(0, result);
+            finished += "ay";
 
             std::transform(std::begin(finished), std::end(finished), std::begin(finished), tolower);
 
@@ -88,25 +92,56 @@ std::string wordToPig(const std::string &englishWord)
         return englishWord;
 }
 
+/*
+constexpr char *wordToPig(char *englishWord)
+{
+    auto wordSize {std::strlen(englishWord)};
+
+    auto result {std::find_first_of(englishWord[0], englishWord[wordSize], Characters::Letters::VOWELS_WITH_Y[0], Characters::Letters::VOWELS_WITH_Y[std::strlen(Characters::Letters::VOWELS_WITH_Y)])};
+
+    std::cout << result << std::endl;
+
+    if (result != '\n')
+    {
+        if (result == 0)
+            return std::strcat(englishWord, "way");
+        else
+        {
+            //std::string noPrefix {englishWord.substr(result)};
+
+            //std::string suffix {englishWord.substr(0, result)};
+
+            //suffix += {"ay"};
+
+            //std::string finished {noPrefix + suffix};
+
+            //std::transform(std::begin(finished), std::end(finished), std::begin(finished), tolower);
+
+
+
+            return "not done";
+        }
+    }
+
+    return englishWord;
+}
+*/
+
 std::string wordToPigPunctuation(const std::string &englishWord)
 {
     std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};
+    std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::Letters::ALL)};
 
-    std::string prefix {englishWord.substr(0, wordStartIndex)};
-    std::string rest {englishWord.substr(wordStartIndex)};
-
-    std::string::size_type wordEndIndex {rest.find_last_of(Characters::Letters::ALL)};
-
-    std::string word {rest.substr(0, wordEndIndex + 1)};
-    std::string suffix {rest.substr(wordEndIndex + 1)};
-
-
-    return prefix + wordToPig(word) + suffix;
+    //prefix punctuation + pigified word + suffix punctuation
+    std::string finished {englishWord.substr(0, wordStartIndex)};
+    finished += wordToPig(englishWord.substr(0, wordEndIndex + 1));
+    finished += englishWord.substr(wordEndIndex + 1);
+    return finished;
 }
 
-std::string multipleWordsToPig(const std::string &englishWords)
+std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
 {
-    std::stringstream wordStream {englishWords};
+    std::stringstream wordStream {words};
     std::string pigWords {""};
 
     //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
@@ -115,7 +150,8 @@ std::string multipleWordsToPig(const std::string &englishWords)
 
     while (wordStream >> word)
     {
-        pigWords += wordToPig(word) + " ";
+        pigWords += wordChanger(word);
+        pigWords += " ";
     }
 
     /*
@@ -126,30 +162,16 @@ std::string multipleWordsToPig(const std::string &englishWords)
     */
 
     return pigWords;
+}
+
+std::string wordsToPig(const std::string &englishWords)
+{
+    return changeWords(englishWords, wordToPig);
 }
 
 std::string sentenceToPig(const std::string &englishSentence)
 {
-    std::stringstream wordStream {englishSentence};
-    std::string pigWords {""};
-
-    //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
-
-    std::string word {""};
-
-    while (wordStream >> word)
-    {
-        pigWords += wordToPigPunctuation(word) + " ";
-    }
-
-    /*
-    for (std::string &word : wordStream)
-    {
-        pigWords += wordToPig(word);
-    }
-    */
-
-    return pigWords;
+    return changeWords(englishSentence, wordToPigPunctuation);
 }
 
 std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels)
@@ -161,6 +183,9 @@ std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginning
 
     return prefix + noPrefix;
 }
+
+#if __cplusplus >= 201703L
+#endif
 }
 
 #endif // ANSLATORTRAY_H
