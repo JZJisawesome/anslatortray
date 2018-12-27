@@ -137,12 +137,14 @@ constexpr char *wordToPig(char *englishWord)
 std::string wordToPigPunctuation(const std::string &englishWord)
 {
     std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};
-    std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::Letters::ALL)};
+
+    std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::Letters::ALL) + 1};
 
     //prefix punctuation + pigified word + suffix punctuation
     std::string finished {englishWord.substr(0, wordStartIndex)};
-    finished += wordToPig(englishWord.substr(0, wordEndIndex + 1));
-    finished += englishWord.substr(wordEndIndex + 1);
+    finished += wordToPig(englishWord.substr(wordStartIndex, wordEndIndex- wordStartIndex));//2nd param is count between start and end
+    finished += englishWord.substr(wordEndIndex);
+
     return finished;
 }
 
