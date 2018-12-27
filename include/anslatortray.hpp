@@ -1,5 +1,5 @@
 /* Anslatortray
- * A library to translate to and from pig latin
+ * A library to translate to and (kind of) from pig latin
  *
  * MIT License
  *
@@ -87,8 +87,6 @@ std::string wordToPig(const std::string &englishWord)
             finished += englishWord.substr(0, result);
             finished += "ay";
 
-            std::transform(std::begin(finished), std::end(finished), std::begin(finished), tolower);
-
             return finished;
         }
     }
@@ -141,6 +139,7 @@ std::string smartWordToPig(const std::string &englishWord)
 
 
     std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end
+    std::transform(std::begin(pig), std::end(pig), std::begin(pig), tolower);//make all letters in new word lower for now//fixme why no std::tolower
     if (std::isupper(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)[0]))//if original word had capital
         pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have capital
 
