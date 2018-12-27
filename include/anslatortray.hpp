@@ -51,8 +51,6 @@ constexpr char VOWELS[] {"aAeEiIoOuU"};
 constexpr char Y[] {"yY"};
 constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
 }
-
-constexpr char PUNCTUAION[] {"?!.,;:()/\"\\"};
 }
 
 inline std::string wordToPig(const std::string &englishWord);
@@ -77,7 +75,7 @@ namespace anslatortray
 {
 std::string wordToPig(const std::string &englishWord)
 {
-    std::string::size_type result {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};
+    std::string::size_type result {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme depends on word
 
     if (result != std::string::npos)
     {
@@ -138,7 +136,10 @@ std::string wordToPigPunctuation(const std::string &englishWord)
 {
     std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};
 
-    std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::Letters::ALL) + 1};
+    std::string::size_type wordEndIndex {englishWord.find('\'')};
+
+    if (wordEndIndex == std::string::npos)
+        wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};
 
     //prefix punctuation + pigified word + suffix punctuation
     std::string finished {englishWord.substr(0, wordStartIndex)};
