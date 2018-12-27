@@ -33,10 +33,9 @@
 #include <cstdint>
 #include <iterator>
 #include <algorithm>
+#include <cctype>
 
 #include <cstring>
-
-#include <iostream>
 
 
 namespace anslatortray
@@ -59,7 +58,7 @@ inline std::string wordToPig(const std::string &englishWord);
 inline std::string_view wordToPigSV(std::string_view englishWord);
 #endif
 
-inline std::string wordToPigPunctuation(const std::string &englishWord);
+inline std::string smartWordToPig(const std::string &englishWord);
 
 inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
 
@@ -132,18 +131,23 @@ constexpr char *wordToPig(char *englishWord)
 }
 */
 
-std::string wordToPigPunctuation(const std::string &englishWord)
+std::string smartWordToPig(const std::string &englishWord)
 {
     std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};
 
     std::string::size_type wordEndIndex {englishWord.find('\'')};
-
     if (wordEndIndex == std::string::npos)
         wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};
 
+
+    std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end
+    if (std::isupper(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)[0]))//if original word had capital
+        pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have capital
+
+
     //prefix punctuation + pigified word + suffix punctuation
     std::string finished {englishWord.substr(0, wordStartIndex)};
-    finished += wordToPig(englishWord.substr(wordStartIndex, wordEndIndex- wordStartIndex));//2nd param is count between start and end
+    finished += pig;
     finished += englishWord.substr(wordEndIndex);
 
     return finished;
@@ -181,7 +185,7 @@ std::string wordsToPig(const std::string &englishWords)
 
 std::string sentenceToPig(const std::string &englishSentence)
 {
-    return changeWords(englishSentence, wordToPigPunctuation);
+    return changeWords(englishSentence, smartWordToPig);
 }
 
 std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels)
