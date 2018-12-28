@@ -109,9 +109,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a85d2c30ac3cdffc60747db717e9f4e95"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#a85d2c30ac3cdffc60747db717e9f4e95">wordsToPig</a> (const std::string &amp;englishWords)</td></tr>
 <tr class="memdesc:a85d2c30ac3cdffc60747db717e9f4e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.  <a href="#a85d2c30ac3cdffc60747db717e9f4e95">More...</a><br /></td></tr>
 <tr class="separator:a85d2c30ac3cdffc60747db717e9f4e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d7367ecbc420223ebd8e94207ff91ab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#a5d7367ecbc420223ebd8e94207ff91ab">attemptWordToEnglish</a> (const std::string &amp;pig, std::uint64_t beginningVowels=1)</td></tr>
-<tr class="memdesc:a5d7367ecbc420223ebd8e94207ff91ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to translate a word in pig latin back to english.  <a href="#a5d7367ecbc420223ebd8e94207ff91ab">More...</a><br /></td></tr>
-<tr class="separator:a5d7367ecbc420223ebd8e94207ff91ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e9ee1f1daab71310596091af5b5b9f7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#a9e9ee1f1daab71310596091af5b5b9f7">attemptWordToEnglish</a> (const std::string &amp;pig, std::uint64_t numBeginningConosoants=1)</td></tr>
+<tr class="memdesc:a9e9ee1f1daab71310596091af5b5b9f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to translate a word in pig latin back to english.  <a href="#a9e9ee1f1daab71310596091af5b5b9f7">More...</a><br /></td></tr>
+<tr class="separator:a9e9ee1f1daab71310596091af5b5b9f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aace2395685773a102397d0e6d5f71869"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#aace2395685773a102397d0e6d5f71869">changeWords</a> (const std::string &amp;words, std::string wordChanger(const std::string &amp;word))</td></tr>
 <tr class="memdesc:aace2395685773a102397d0e6d5f71869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to perform an operation on all whitespace-seperated strings given to it.  <a href="#aace2395685773a102397d0e6d5f71869">More...</a><br /></td></tr>
 <tr class="separator:aace2395685773a102397d0e6d5f71869"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -119,8 +119,8 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Namespace containing functions to translate from English to Pig Latin. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="a5d7367ecbc420223ebd8e94207ff91ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5d7367ecbc420223ebd8e94207ff91ab">&#9670;&nbsp;</a></span>attemptWordToEnglish()</h2>
+<a id="a9e9ee1f1daab71310596091af5b5b9f7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9e9ee1f1daab71310596091af5b5b9f7">&#9670;&nbsp;</a></span>attemptWordToEnglish()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -138,7 +138,7 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">std::uint64_t&#160;</td>
-          <td class="paramname"><em>beginningVowels</em> = <code>1</code>&#160;</td>
+          <td class="paramname"><em>numBeginningConosoants</em> = <code>1</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -158,7 +158,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pig</td><td>Word in pig latin </td></tr>
-    <tr><td class="paramname">beginningVowels</td><td>Honestly don't remember </td></tr>
+    <tr><td class="paramname">numBeginningConosoants</td><td>The number of conosonants before the first vowel in the original word. Default 1 (most common) </td></tr>
   </table>
   </dd>
 </dl>
@@ -201,7 +201,6 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Helper function to perform an operation on all whitespace-seperated strings given to it. </p>
-<p>Probably could do something better with std::transform</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">words</td><td>Words (tokens) seperated by whitespace </td></tr>
@@ -363,7 +362,7 @@ Functions</h2></td></tr>
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceanslatortray.html">anslatortray</a></li>
-    <li class="footer">Generated on Fri Dec 28 2018 10:21:08 for Anslatortray by
+    <li class="footer">Generated on Fri Dec 28 2018 12:28:25 for Anslatortray by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>

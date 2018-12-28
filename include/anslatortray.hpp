@@ -41,6 +41,7 @@
 #define ANSLATORTRAY_HPP
 
 #if __cplusplus >= 201103L
+
 #include <string>
 #include <sstream>
 #include <cstdint>
@@ -84,9 +85,12 @@ namespace anslatortray
      */
     inline std::string wordToPig(const std::string &englishWord);
 
-//inline constexpr char *wordToPig(char *englishWord);
+#if __cplusplus >= 201402L
+    //inline constexpr char *wordToPig(char *englishWord);
+#endif
+
 #if __cplusplus >= 201703L
-    inline std::string_view wordToPigSV(std::string_view englishWord);
+    //inline std::string_view wordToPigSV(std::string_view englishWord);
 #endif
 
     /** \brief Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.
@@ -110,8 +114,6 @@ namespace anslatortray
 
     /** \brief Helper function to perform an operation on all whitespace-seperated strings given to it.
      *
-     * Probably could do something better with std::transform
-     *
      * \param words Words (tokens) seperated by whitespace
      * \param wordChanger Function taking a const std::string & as a single parameter and returning a std::string
      * \return Words fed through wordChanger with spaces between them
@@ -133,6 +135,9 @@ namespace anslatortray
             /**< Array containing all upper and lower case vowels (including y) */
             constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
         }
+
+        /**< Array containing diffrent apostrophes */
+        constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’
     }
 }
 
@@ -160,10 +165,12 @@ namespace anslatortray
         return englishWord;
     }
 
+    #if __cplusplus >= 201402L
     /*
     constexpr char *wordToPig(char *englishWord)
     {
         auto wordSize {std::strlen(englishWord)};
+
 
         auto result {std::find_first_of(englishWord[0], englishWord[wordSize], Characters::Letters::VOWELS_WITH_Y[0], Characters::Letters::VOWELS_WITH_Y[std::strlen(Characters::Letters::VOWELS_WITH_Y)])};
 
@@ -187,19 +194,22 @@ namespace anslatortray
 
 
 
-                return "not done";
+                return englishWord;
             }
         }
+
 
         return englishWord;
     }
     */
+    #endif
+
 
     std::string smartWordToPig(const std::string &englishWord)
     {
         std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
 
-        std::string::size_type wordEndIndex {englishWord.find('\'')};//try to find an ending apostrophe for possesion or a constraction
+        std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::APOSTROPHE)};//try to find an ending apostrophe for possesion or a constraction
         if (wordEndIndex == std::string::npos)
             wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//otherwise find the last letter
 
@@ -223,25 +233,25 @@ namespace anslatortray
         std::stringstream wordStream {words};
         std::string pigWords {""};
 
-        //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
-
         std::string word {""};
 
         while (wordStream >> word)//tokenize words
         {
             //preform wordChanger on each word and add space in between
-            pigWords += wordChanger(word);
+           pigWords += wordChanger(word);
             pigWords += " ";
         }
 
-        /*
-        for (std::string &word : wordStream)
-        {
-            pigWords += wordToPig(word);
-        }
-        */
-
         return pigWords;
+
+        //best way of doing it (if it worked)
+        //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
+
+        //not worth the hassle
+        //for (auto word : std::istream_iterator<std::string>{wordStream})
+        //{
+        //    pigWords += wordToPig(word);
+        //}
     }
 
     std::string wordsToPig(const std::string &englishWords)
@@ -269,5 +279,6 @@ namespace anslatortray
 #else
 #error At the moment, Anslatortray only has support for C++11 and later. Please change your compiliation flags accordinaly
 #endif
+
 #endif // ANSLATORTRAY_H
 
