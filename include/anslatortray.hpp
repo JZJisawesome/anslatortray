@@ -54,6 +54,62 @@
 */
 namespace anslatortray
 {
+/** \brief Translates a single English word to pig latin.
+ *
+ * Moves all constanants until the first vowel to the end of the word and adds "ay".
+ * Alternativly, if the word starts with a vowel, "way" is added to the end.
+ *
+ * \param englishWord An English word to translate
+ * \return The word in pig latin
+ */
+inline std::string wordToPig(const std::string &englishWord);
+
+//inline constexpr char *wordToPig(char *englishWord);
+#if __cplusplus >= 201703L
+inline std::string_view wordToPigSV(std::string_view englishWord);
+#endif
+
+/** \brief Translates a single complex English word to pig latin. (more robust)
+ *
+ * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.
+ *
+ * \param englishWord An English word to translate
+ * \return The word in pig latin
+ */
+inline std::string smartWordToPig(const std::string &englishWord);
+
+/** \brief Uses smartWordToPig and changeWords to perform translation from English to pig latin on every word it is given.
+ *
+ * Replaces all whitespace with a regular space.
+ *
+ * \param englishText The original English text
+ * \return The text translated to pig latin
+*/
+inline std::string translate(const std::string &englishText);
+
+/** \brief Tries to translate a word in pig latin back to english.
+ *
+ * This is hard to do because diffrent English words can be the same in Pig latin.
+ *
+ * \param pig Word in pig latin
+ * \param beginningVowels Honestly don't remember
+ * \return Word in English
+ */
+inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels = 1);
+
+/** \brief Helper function to perform an operation on all whitespace-seperated strings given to it.
+ *
+ * Probably could do something better with std::transform
+ *
+ * \param words Words (tokens) seperated by whitespace
+ * \param wordChanger Function taking a const std::string & as a single parameter and returning a std::string
+ * \return Words fed through wordChanger with spaces between them
+ */
+inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
+
+inline std::string wordsToPig(const std::string &englishWords);
+
+
 namespace Characters
 {
 namespace Letters
@@ -65,23 +121,6 @@ constexpr char Y[] {"yY"};
 constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
 }
 }
-
-inline std::string wordToPig(const std::string &englishWord);
-//inline constexpr char *wordToPig(char *englishWord);
-#if __cplusplus >= 201703L
-inline std::string_view wordToPigSV(std::string_view englishWord);
-#endif
-
-inline std::string smartWordToPig(const std::string &englishWord);
-
-inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
-
-inline std::string wordsToPig(const std::string &englishWords);
-inline std::string translate(const std::string &englishSentence);
-
-inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels = 1);
-
-
 }
 
 namespace anslatortray
@@ -196,14 +235,14 @@ std::string wordsToPig(const std::string &englishWords)
     return changeWords(englishWords, wordToPig);
 }
 
-std::string translate(const std::string &englishSentence)
+std::string translate(const std::string &englishText)
 {
     return changeWords(englishSentence, smartWordToPig);
 }
 
 std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels)
 {
-    std::string noAy {pig.substr(0, pig.size() - 2)};
+    std::string noAy {pig.substr(0, pig.size() - 2)};//try to take of ay
 
     std::string noPrefix {noAy.substr(0, noAy.size() - beginningVowels)};
     std::string prefix {noAy.substr(noAy.size() - beginningVowels)};
