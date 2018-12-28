@@ -40,6 +40,7 @@
 #ifndef ANSLATORTRAY_HPP
 #define ANSLATORTRAY_HPP
 
+#if __cplusplus >= 201103L
 #include <string>
 #include <sstream>
 #include <cstdint>
@@ -102,10 +103,10 @@ namespace anslatortray
      * This is hard to do because diffrent English words can be the same in Pig latin.
      *
      * \param pig Word in pig latin
-     * \param beginningVowels Honestly don't remember
+     * \param numBeginningConosoants The number of conosonants before the first vowel in the original word. Default 1 (most common)
      * \return Word in English
      */
-    inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels = 1);
+    inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants = 1);
 
     /** \brief Helper function to perform an operation on all whitespace-seperated strings given to it.
      *
@@ -139,24 +140,24 @@ namespace anslatortray
 {
     std::string wordToPig(const std::string &englishWord)
     {
-        std::string::size_type result {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme depends on word
+        const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme depends on word
 
-        if (result != std::string::npos)
+        if (firstVowel != std::string::npos)
         {
-            if (result == 0)
+            if (firstVowel == 0)//word starts with vowel
                 return englishWord + "way";
             else
             {
-                //word without prefix + word until 1st vowel + "ay"
-                std::string finished {englishWord.substr(result)};
-                finished += englishWord.substr(0, result);
-                finished += "ay";
+                //word without beginning consononts + beginning consononts + "ay"
+                std::string result {englishWord.substr(firstVowel)};
+                result += englishWord.substr(0, firstVowel);
+                result += "ay";
 
-                return finished;
+                return result;
             }
         }
-        else
-            return englishWord;
+
+        return englishWord;
     }
 
     /*
@@ -196,11 +197,11 @@ namespace anslatortray
 
     std::string smartWordToPig(const std::string &englishWord)
     {
-        std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};
+        std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
 
-        std::string::size_type wordEndIndex {englishWord.find('\'')};
+        std::string::size_type wordEndIndex {englishWord.find('\'')};//try to find an ending apostrophe for possesion or a constraction
         if (wordEndIndex == std::string::npos)
-            wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};
+            wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//otherwise find the last letter
 
 
         std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end
@@ -210,11 +211,11 @@ namespace anslatortray
 
 
         //prefix punctuation + pigified word + suffix punctuation
-        std::string finished {englishWord.substr(0, wordStartIndex)};
-        finished += pig;
-        finished += englishWord.substr(wordEndIndex);
+        std::string result {englishWord.substr(0, wordStartIndex)};
+        result += pig;
+        result += englishWord.substr(wordEndIndex);
 
-        return finished;
+        return result;
     }
 
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
@@ -226,8 +227,9 @@ namespace anslatortray
 
         std::string word {""};
 
-        while (wordStream >> word)
+        while (wordStream >> word)//tokenize words
         {
+            //preform wordChanger on each word and add space in between
             pigWords += wordChanger(word);
             pigWords += " ";
         }
@@ -252,18 +254,20 @@ namespace anslatortray
         return changeWords(englishText, smartWordToPig);
     }
 
-    std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels)
+    std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants)
     {
-        std::string noAy {pig.substr(0, pig.size() - 2)};//try to take of ay
+        std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay
 
-        std::string noPrefix {noAy.substr(0, noAy.size() - beginningVowels)};
-        std::string prefix {noAy.substr(noAy.size() - beginningVowels)};
+        std::string withoutBeginningConosoants {noAy.substr(0, noAy.size() - numBeginningConosoants)};
+        std::string beginningConosoants {noAy.substr(noAy.size() - numBeginningConosoants)};
 
-        return prefix + noPrefix;
+        return beginningConosoants + withoutBeginningConosoants;
     }
 
-#if __cplusplus >= 201703L
-#endif
 }
 
+#else
+#error At the moment, Anslatortray only has support for C++11 and later. Please change your compiliation flags accordinaly
+#endif
 #endif // ANSLATORTRAY_H
+
