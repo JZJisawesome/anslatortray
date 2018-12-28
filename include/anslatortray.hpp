@@ -59,7 +59,8 @@ namespace anslatortray
 {
     /** \brief Translates a single complex English word to pig latin. (more robust)
      *
-     * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.
+     * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.\n
+     * Imperfect results with plural words (s) and words with mutiple possesion (s')
      *
      * \param englishWord An English word to translate
      * \return The word in pig latin
@@ -84,14 +85,6 @@ namespace anslatortray
      * \return The word in pig latin
      */
     inline std::string wordToPig(const std::string &englishWord);
-
-#if __cplusplus >= 201402L
-    //inline constexpr char *wordToPig(char *englishWord);
-#endif
-
-#if __cplusplus >= 201703L
-    //inline std::string_view wordToPigSV(std::string_view englishWord);
-#endif
 
     /** \brief Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.
      *
@@ -120,6 +113,16 @@ namespace anslatortray
      */
     inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
 
+#if __cplusplus >= 201402L
+    //inline constexpr char *wordToPig(char *englishWord);
+#endif
+
+#if __cplusplus >= 201703L
+    //inline std::string_view wordToPigSV(std::string_view englishWord);
+#endif
+
+    /**< Ending to use if word to translate starts with a vowel */
+    constexpr char VOWEL_START_STYLE[] = {"way"};//sometimes "yay" is used
 
     namespace Characters
     {
@@ -137,7 +140,7 @@ namespace anslatortray
         }
 
         /**< Array containing diffrent apostrophes */
-        constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’
+        constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’ but unicode does not play nice with std::string::find_last_of
     }
 }
 
@@ -145,12 +148,12 @@ namespace anslatortray
 {
     std::string wordToPig(const std::string &englishWord)
     {
-        const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme depends on word
+        const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme y being a vowel depends on word
 
         if (firstVowel != std::string::npos)
         {
             if (firstVowel == 0)//word starts with vowel
-                return englishWord + "way";
+                return englishWord + VOWEL_START_STYLE;
             else
             {
                 //word without beginning consononts + beginning consononts + "ay"
@@ -165,7 +168,7 @@ namespace anslatortray
         return englishWord;
     }
 
-    #if __cplusplus >= 201402L
+#if __cplusplus >= 201402L
     /*
     constexpr char *wordToPig(char *englishWord)
     {
@@ -192,8 +195,6 @@ namespace anslatortray
 
                 //std::transform(std::begin(finished), std::end(finished), std::begin(finished), tolower);
 
-
-
                 return englishWord;
             }
         }
@@ -202,28 +203,27 @@ namespace anslatortray
         return englishWord;
     }
     */
-    #endif
-
+#endif
 
     std::string smartWordToPig(const std::string &englishWord)
     {
         std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
 
-        std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::APOSTROPHE)};//try to find an ending apostrophe for possesion or a constraction
+        std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::APOSTROPHE)};//try to find an ending apostrophe for possesion or a contraction
         if (wordEndIndex == std::string::npos)
             wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//otherwise find the last letter
 
 
-        std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end
+        std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end of actual word
         std::transform(std::begin(pig), std::end(pig), std::begin(pig), tolower);//make all letters in new word lower for now//fixme why no std::tolower
         if (std::isupper(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)[0]))//if original word had capital
-            pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have capital
+            pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have capital; have to cast int to char
 
 
         //prefix punctuation + pigified word + suffix punctuation
         std::string result {englishWord.substr(0, wordStartIndex)};
-        result += pig;
-        result += englishWord.substr(wordEndIndex);
+        result += {pig};
+        result += {englishWord.substr(wordEndIndex)};
 
         return result;
     }
@@ -238,14 +238,16 @@ namespace anslatortray
         while (wordStream >> word)//tokenize words
         {
             //preform wordChanger on each word and add space in between
-           pigWords += wordChanger(word);
-            pigWords += " ";
+            pigWords += {wordChanger(word)};
+            pigWords += {" "};
         }
 
         return pigWords;
 
+
         //best way of doing it (if it worked)
         //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
+
 
         //not worth the hassle
         //for (auto word : std::istream_iterator<std::string>{wordStream})
@@ -281,4 +283,3 @@ namespace anslatortray
 #endif
 
 #endif // ANSLATORTRAY_H
-
