@@ -8,6 +8,7 @@ var anslatortray_8hpp =
     [ "wordToPig", "anslatortray_8hpp.html#aeaeb2833c88ae594774f56079e5efd05", null ],
     [ "ALL", "anslatortray_8hpp.html#a3a92725240a5bed2e5a18d2200881384", null ],
     [ "APOSTROPHE", "anslatortray_8hpp.html#a4d2191d9ea767c0da47ec5be62056674", null ],
+    [ "VOWEL_START_STYLE", "anslatortray_8hpp.html#a6b142efce0ec803778cb254bbe3858e3", null ],
     [ "VOWELS", "anslatortray_8hpp.html#a019177cf74cc66d808f322af4cd641f8", null ],
     [ "VOWELS_WITH_Y", "anslatortray_8hpp.html#adce0e2235e12a73ed43aa887ff6425d3", null ],
     [ "Y", "anslatortray_8hpp.html#ac5cb6c0853c1ae071618bdc4e31e8181", null ]
