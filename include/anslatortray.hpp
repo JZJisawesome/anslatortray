@@ -1,4 +1,5 @@
 /* Anslatortray
+ *
  * A simple, header-only library to translate from English to Pig Latin.
  *
  * MIT License
@@ -54,21 +55,6 @@
 */
 namespace anslatortray
 {
-/** \brief Translates a single English word to pig latin.
- *
- * Moves all constanants until the first vowel to the end of the word and adds "ay".
- * Alternativly, if the word starts with a vowel, "way" is added to the end.
- *
- * \param englishWord An English word to translate
- * \return The word in pig latin
- */
-inline std::string wordToPig(const std::string &englishWord);
-
-//inline constexpr char *wordToPig(char *englishWord);
-#if __cplusplus >= 201703L
-inline std::string_view wordToPigSV(std::string_view englishWord);
-#endif
-
 /** \brief Translates a single complex English word to pig latin. (more robust)
  *
  * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.
@@ -86,6 +72,30 @@ inline std::string smartWordToPig(const std::string &englishWord);
  * \return The text translated to pig latin
 */
 inline std::string translate(const std::string &englishText);
+
+/** \brief Translates a single English word to pig latin.
+ *
+ * Moves all constanants until the first vowel to the end of the word and adds "ay".
+ * Alternativly, if the word starts with a vowel, "way" is added to the end.
+ *
+ * \param englishWord An English word to translate
+ * \return The word in pig latin
+ */
+inline std::string wordToPig(const std::string &englishWord);
+
+//inline constexpr char *wordToPig(char *englishWord);
+#if __cplusplus >= 201703L
+inline std::string_view wordToPigSV(std::string_view englishWord);
+#endif
+
+/** \brief Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.
+ *
+ * Replaces all whitespace with a regular space.
+ *
+ * \param englishText The original English text
+ * \return The text "translated" to pig latin (no punctuation, uppercase, or possesion support)
+*/
+inline std::string wordsToPig(const std::string &englishWords);
 
 /** \brief Tries to translate a word in pig latin back to english.
  *
@@ -106,15 +116,6 @@ inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t be
  * \return Words fed through wordChanger with spaces between them
  */
 inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
-
-/** \brief Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.
- *
- * Replaces all whitespace with a regular space.
- *
- * \param englishText The original English text
- * \return The text "translated" to pig latin (no punctuation, uppercase, or possesion support)
-*/
-inline std::string wordsToPig(const std::string &englishWords);
 
 
 namespace Characters
