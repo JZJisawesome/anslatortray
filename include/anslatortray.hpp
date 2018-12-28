@@ -123,22 +123,24 @@ namespace anslatortray//Definitions
 
 
     //Internal use
+    /**< Arrays of diffrent characters (internal use) */
     namespace Characters
     {
+        /**< Arrays of diffrent letters (internal use) */
         namespace Letters
         {
-            /**< Array containing all upper and lower case letters */
+            /**< Array containing all upper and lower case letters (internal use) */
             constexpr char ALL[] {"aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ"};
 
-            /**< Array containing all upper and lower case vowels (except for y) */
+            /**< Array containing all upper and lower case vowels (except for y) (internal use) */
             constexpr char VOWELS[] {"aAeEiIoOuU"};
-            /**< Array containing all upper and lower case vowels (including y) */
+            /**< Array containing all upper and lower case vowels (including y) (internal use) */
             constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
-            /**< Array containing upper and lower case y */
+            /**< Array containing upper and lower case y (internal use) */
             constexpr char Y[] {"yY"};
         }
 
-        /**< Array containing diffrent apostrophes */
+        /**< Array containing diffrent apostrophes (internal use) */
         constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’ but unicode does not play nice with std::string::find_last_of
     }
 
@@ -195,7 +197,7 @@ namespace anslatortray
 
     std::string wordToPig(const std::string &englishWord)
     {
-        const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS_WITH_Y)};//fixme y being a vowel depends on word
+        const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS)};//fixme y being a vowel depends on word
 
         if (firstVowel != std::string::npos)
         {
