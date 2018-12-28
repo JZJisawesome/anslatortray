@@ -1,5 +1,5 @@
 /* Anslatortray
- * A library to translate to and (kind of) from pig latin
+ * A simple, header-only library to translate from English to Pig Latin.
  *
  * MIT License
  *
@@ -24,7 +24,18 @@
  * SOFTWARE.
 */
 
-
+/** \mainpage
+ *
+ * \section welcome_sec Anslatortray
+ *
+ * Welcome to the Anslatortray Documentation!
+ *
+ * <a href="https://github.com/JZJisawesome/anslatortray">Anslatortray Github Repository</a>.
+ *
+ * \author John Jekel
+ * \date 2018
+ * \copyright <a href="https://raw.githubusercontent.com/JZJisawesome/anslatortray/master/LICENSE">MIT Licence</a>
+ */
 #ifndef ANSLATORTRAY_HPP
 #define ANSLATORTRAY_HPP
 
@@ -37,7 +48,10 @@
 
 #include <cstring>
 
-
+/** \namespace anslatortray
+ *
+ * \brief Namespace containing functions to translate from English to Pig Latin.
+*/
 namespace anslatortray
 {
 namespace Characters
@@ -63,7 +77,7 @@ inline std::string smartWordToPig(const std::string &englishWord);
 inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
 
 inline std::string wordsToPig(const std::string &englishWords);
-inline std::string sentenceToPig(const std::string &englishSentence);
+inline std::string translate(const std::string &englishSentence);
 
 inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels = 1);
 
@@ -182,7 +196,7 @@ std::string wordsToPig(const std::string &englishWords)
     return changeWords(englishWords, wordToPig);
 }
 
-std::string sentenceToPig(const std::string &englishSentence)
+std::string translate(const std::string &englishSentence)
 {
     return changeWords(englishSentence, smartWordToPig);
 }
