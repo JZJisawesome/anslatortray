@@ -45,11 +45,10 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
-#include <iterator>
 #include <algorithm>
 #include <cctype>
-
-#include <cstring>
+//#include <iterator>
+//#include <cstring>
 
 /** \namespace anslatortray
  *
@@ -207,23 +206,34 @@ namespace anslatortray
 
     std::string smartWordToPig(const std::string &englishWord)
     {
+        //find the actual word in the entire string
         std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
 
         std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::APOSTROPHE)};//try to find an ending apostrophe for possesion or a contraction
-        if (wordEndIndex == std::string::npos)
-            wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//otherwise find the last letter
+        if (wordEndIndex == std::string::npos)//if there is no apostrophe
+            wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//find the last letter in the string
+
+        //extract it and translate
+        std::string actualWord = {englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)};//2nd param is count between start and end of actual word
+        std::string pig {wordToPig(actualWord)};//translate English word
 
 
-        std::string pig {wordToPig(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex))};//2nd param is count between start and end of actual word
-        std::transform(std::begin(pig), std::end(pig), std::begin(pig), tolower);//make all letters in new word lower for now//fixme why no std::tolower
-        if (std::isupper(englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)[0]))//if original word had capital
-            pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have capital; have to cast int to char
+        //capatilization handeling
+        if (std::all_of(std::begin(actualWord), std::end(actualWord), isupper))//if entire original word was uppercase//fixme why no std::toupper
+            std::transform(std::begin(pig), std::end(pig), std::begin(pig), toupper);//make entire translated word uppercase
+        else
+        {
+            std::transform(std::begin(pig), std::end(pig), std::begin(pig), tolower);//make entire translated word lowercase//fixme why no std::tolower
+
+            if (std::isupper(actualWord[0]))//if original word had an uppercase first letter
+                pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have uppercase first letter; have to cast int to char
+        }
 
 
         //prefix punctuation + pigified word + suffix punctuation
-        std::string result {englishWord.substr(0, wordStartIndex)};
-        result += {pig};
-        result += {englishWord.substr(wordEndIndex)};
+        std::string result {englishWord.substr(0, wordStartIndex)};//up to the start of the word
+        result += {pig};//translated word from earlier
+        result += {englishWord.substr(wordEndIndex)};//from end of the word to the end of the string
 
         return result;
     }
