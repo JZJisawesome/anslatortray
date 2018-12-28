@@ -107,6 +107,13 @@ inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t be
  */
 inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
 
+/** \brief Uses wordToPig and changeWords to perform dumb translation from English to pig latin on every word it is given.
+ *
+ * Replaces all whitespace with a regular space.
+ *
+ * \param englishText The original English text
+ * \return The text "translated" to pig latin (no punctuation, uppercase, or possesion support)
+*/
 inline std::string wordsToPig(const std::string &englishWords);
 
 
@@ -114,10 +121,14 @@ namespace Characters
 {
 namespace Letters
 {
+/**< Array containing all upper and lower case letters */
 constexpr char ALL[] {"aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ"};
 
+/**< Array containing all upper and lower case vowels (except for y) */
 constexpr char VOWELS[] {"aAeEiIoOuU"};
+/**< Array containing upper and lower case y */
 constexpr char Y[] {"yY"};
+/**< Array containing all upper and lower case vowels (including y) */
 constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
 }
 }
@@ -237,7 +248,7 @@ std::string wordsToPig(const std::string &englishWords)
 
 std::string translate(const std::string &englishText)
 {
-    return changeWords(englishSentence, smartWordToPig);
+    return changeWords(englishText, smartWordToPig);
 }
 
 std::string attemptWordToEnglish(const std::string &pig, std::uint64_t beginningVowels)
