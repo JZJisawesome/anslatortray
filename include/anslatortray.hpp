@@ -174,7 +174,7 @@ namespace anslatortray
 
 
         //capatilization handeling
-        if (std::all_of(std::begin(actualWord), std::end(actualWord), isupper))//if entire original word was uppercase//fixme why no std::toupper
+        if (std::all_of(std::begin(actualWord), std::end(actualWord), isupper) && actualWord != "I")//if entire original word was uppercase (except for the word "I")//fixme why no std::toupper
             std::transform(std::begin(pig), std::end(pig), std::begin(pig), toupper);//make entire translated word uppercase
         else
         {
@@ -313,14 +313,6 @@ namespace anslatortray
             //preform wordChanger on each word and add space in between
             newWords += {wordChanger(word)};
             newWords += {" "};
-        }
-        */
-
-
-        /* not worth the hassle of setting up a range
-        for (auto word : std::istream_iterator<std::string>{wordStream})
-        {
-            pigWords += wordToPig(word);
         }
         */
     }
