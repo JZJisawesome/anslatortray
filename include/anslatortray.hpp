@@ -1,6 +1,6 @@
 /** \mainpage
  *
- * \section welcome_sec Anslatortray 0.3.1
+** \section welcome_sec Anslatortray 0.3.1
  *
  * Welcome to the Anslatortray Documentation!
  *
@@ -8,9 +8,26 @@
  *
  * <a href="https://github.com/JZJisawesome/anslatortray">Anslatortray Github Repository</a>.
  *
+ * <a href="hhttps://en.wikipedia.org/wiki/Pig_Latin">Wikipedia's definition</a> of Pig Latin is "a language game in which words in English are altered, usually by adding a fabricated suffix or by moving the onset or initial consonant or consonant cluster of a word to the end of the word and adding a vocalic syllable to create such a suffix."
+ *
+ * Essentially, the word is reorganized in an effort to hide its true meaning, which can be lots of fun!
+ * The Anslatortray library can help out by converting any English text into Pig Latin quickly and easily
+ *
+ * Try compiling this example code (with C++11)
+ *
+ * \code
+ * #include "anslatortray.hpp"
+ * #include <iostream>
+ *
+ * void main()
+ * {
+ *      std::cout << anslatortray::translate("Hello World!") << std::endl;
+ *      return 0;
+ * }
+ * \endcode
  *
  *
- * <h3> Anslatortray Licence </h3>
+** <h3> Anslatortray Licence </h3>
  *
  * MIT License
  *
