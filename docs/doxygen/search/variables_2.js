@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['y',['Y',['../namespaceanslatortray_1_1_characters_1_1_letters.html#ac5cb6c0853c1ae071618bdc4e31e8181',1,'anslatortray::Characters::Letters']]]
+  ['whitespace',['WHITESPACE',['../namespaceanslatortray_1_1_characters.html#a4b31e54392ffe00c7435363785e77227',1,'anslatortray::Characters']]]
 ];

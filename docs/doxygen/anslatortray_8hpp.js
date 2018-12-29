@@ -11,5 +11,6 @@ var anslatortray_8hpp =
     [ "VOWEL_START_STYLE", "anslatortray_8hpp.html#a6b142efce0ec803778cb254bbe3858e3", null ],
     [ "VOWELS", "anslatortray_8hpp.html#a019177cf74cc66d808f322af4cd641f8", null ],
     [ "VOWELS_WITH_Y", "anslatortray_8hpp.html#adce0e2235e12a73ed43aa887ff6425d3", null ],
+    [ "WHITESPACE", "anslatortray_8hpp.html#a4b31e54392ffe00c7435363785e77227", null ],
     [ "Y", "anslatortray_8hpp.html#ac5cb6c0853c1ae071618bdc4e31e8181", null ]
 ];

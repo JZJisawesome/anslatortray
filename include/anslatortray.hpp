@@ -1,6 +1,16 @@
-/* Anslatortray 0.3.1
+/** \mainpage
+ *
+ * \section welcome_sec Anslatortray 0.3.1
+ *
+ * Welcome to the Anslatortray Documentation!
  *
  * A simple, header-only library to translate from English to Pig Latin.
+ *
+ * <a href="https://github.com/JZJisawesome/anslatortray">Anslatortray Github Repository</a>.
+ *
+ *
+ *
+ * <h3> Anslatortray Licence </h3>
  *
  * MIT License
  *
@@ -23,15 +33,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
-
-/** \mainpage
- *
- * \section welcome_sec Anslatortray
- *
- * Welcome to the Anslatortray Documentation!
- *
- * <a href="https://github.com/JZJisawesome/anslatortray">Anslatortray Github Repository</a>.
  *
  * \author John Jekel
  * \date 2018
@@ -59,6 +60,7 @@
 */
 namespace anslatortray//Definitions
 {
+    //External Use
     /** \brief Translates a single complex English word to Pig Latin. (more robust)
      *
      * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.\n
@@ -92,7 +94,7 @@ namespace anslatortray//Definitions
      *
      * Replaces all whitespace with a regular space.
      *
-     * \param englishText The original English text
+     * \param englishWords The original English text
      * \return The text "translated" to Pig Latin (no punctuation, uppercase, or possesion support)
     */
     inline std::string wordsToPig(const std::string &englishWords);
@@ -107,45 +109,37 @@ namespace anslatortray//Definitions
      */
     inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants = 1);
 
-    /**< Ending to use if word to translate starts with a vowel */
+    /** \brief Ending to use if word to translate starts with a vowel */
     constexpr char VOWEL_START_STYLE[] = {"way"};//sometimes "yay" is used
 
 
-    //Features in progress
-    #if __cplusplus >= 201402L
-        //inline constexpr char *wordToPig(char *englishWord);//futile attempt at compile time translation
-    #endif
-
-    #if __cplusplus >= 201703L
-        //inline std::string_view wordToPigSV(std::string_view englishWord);
-    #endif
-
-
     //Internal use
-    /**< Arrays of diffrent characters (internal use) */
+    /** \brief Arrays of diffrent characters (internal use) */
     namespace Characters
     {
-        /**< Arrays of diffrent letters (internal use) */
+        /** \brief Arrays of diffrent letters (internal use) */
         namespace Letters
         {
-            /**< Array containing all upper and lower case letters (internal use) */
+            /** \brief Array containing all upper and lower case letters (internal use) */
             constexpr char ALL[] {"aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ"};
 
-            /**< Array containing all upper and lower case vowels (except for y) (internal use) */
+            /** \brief Array containing all upper and lower case vowels (except for y) (internal use) */
             constexpr char VOWELS[] {"aAeEiIoOuU"};
-            /**< Array containing all upper and lower case vowels (including y) (internal use) */
+            /** \brief Array containing all upper and lower case vowels (including y) (internal use) */
             constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
-            /**< Array containing upper and lower case y (internal use) */
+            /** \brief Array containing upper and lower case y (internal use) */
             constexpr char Y[] {"yY"};
         }
 
-        /**< Array containing diffrent apostrophes (internal use) */
+        /** \brief Array containing diffrent apostrophes (internal use) */
         constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’ but unicode does not play nice with std::string::find_last_of
-        /**< Array containing diffrent types of whitespace (internal use) */
+        /** \brief Array containing diffrent types of whitespace (internal use) */
         constexpr char WHITESPACE[] {" \t\v\n\r\f"};
     }
 
-    /** \brief Helper function to perform an operation on all whitespace-seperated strings given to it.
+    /** \brief Helper function to perform an operation on all whitespace-seperated words (tokens) given to it.
+     *
+     * See Characters::WHITESPACE for the types
      *
      * \param words Words (tokens) seperated by whitespace
      * \param wordChanger Function taking a const std::string & as a single parameter and returning a std::string
@@ -154,12 +148,13 @@ namespace anslatortray//Definitions
     inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
 }
 
+
 //Implementations
 namespace anslatortray
 {
     std::string smartWordToPig(const std::string &englishWord)
     {
-        //find the actual word in the entire string
+        //find the start of the actual word in the string
         std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
 
         std::string::size_type wordEndIndex {englishWord.find_last_of(Characters::APOSTROPHE)};//try to find an ending apostrophe for possesion or a contraction, seperate from translation
@@ -208,7 +203,7 @@ namespace anslatortray
         if (firstVowel != std::string::npos)//basic sanity checking
         {
             if (firstVowel == 0)//word starts with vowel
-                return englishWord + VOWEL_START_STYLE;
+                return englishWord + VOWEL_START_STYLE;//just add "way" (or something else)
             else
             {
                 //word without beginning consononts + beginning consononts + "ay"
@@ -232,10 +227,10 @@ namespace anslatortray
     {
         std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay
 
-        std::string withoutBeginningConosoants {noAy.substr(0, noAy.size() - numBeginningConosoants)};
-        std::string beginningConosoants {noAy.substr(noAy.size() - numBeginningConosoants)};
+        std::string withoutBeginningConosoants {noAy.substr(0, noAy.size() - numBeginningConosoants)};//take rest of word from front
+        std::string beginningConosoants {noAy.substr(noAy.size() - numBeginningConosoants)};//take beginning conosoants from the end
 
-        return beginningConosoants + withoutBeginningConosoants;
+        return beginningConosoants + withoutBeginningConosoants;//put back in proper order
     }
 
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
@@ -252,7 +247,7 @@ namespace anslatortray
             if (tokenEndIndex == std::string::npos)//if there is no more white space (last token in string)
                 word = {words.substr(tokenStartIndex)};//tokenize from last whitespace to end of string
             else
-                word = {words.substr(tokenStartIndex, tokenEndIndex)};//tokenize between last and next whitespace
+                word = {words.substr(tokenStartIndex, tokenEndIndex)};//tokenize between start of token the and next found whitespace
 
 
             //preform wordChanger on each word and add space in between
@@ -266,7 +261,6 @@ namespace anslatortray
         }
 
         return newWords;
-
 
         //probably best way of doing it (if it worked)
         //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});

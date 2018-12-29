@@ -1,7 +1,7 @@
 var NAVTREE =
 [
   [ "Anslatortray", "index.html", [
-    [ "Anslatortray", "index.html#welcome_sec", null ],
+    [ "Anslatortray 0.3.1", "index.html#welcome_sec", null ],
     [ "Namespaces", null, [
       [ "Namespace List", "namespaces.html", "namespaces" ],
       [ "Namespace Members", "namespacemembers.html", [
