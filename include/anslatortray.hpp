@@ -69,6 +69,7 @@
 #include <cctype>
 //#include <cstring>
 //#include <iterator>
+#include <sstream>
 
 
 /** \namespace anslatortray
@@ -255,6 +256,7 @@ namespace anslatortray
         std::string newWords {""};
         std::string word {""};
 
+        /*//dang it it's broken i really wish it wasent but ok i guess
         std::string::size_type tokenStartIndex {words.find_first_not_of(Characters::WHITESPACE)};
         std::string::size_type tokenEndIndex {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};
 
@@ -275,6 +277,15 @@ namespace anslatortray
             //find placement of next token
             tokenStartIndex = {words.find_first_not_of(Characters::WHITESPACE, tokenEndIndex)};//find the next start of a token after whitespace
             tokenEndIndex = {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};//fin the next whitespace after start of token
+        }
+        */
+
+        std::stringstream wordStream {words};
+
+        while (wordStream >> word)//tokenize words
+        {
+            newWords += {wordChanger(word)};
+            newWords += {" "};
         }
 
         return newWords;
