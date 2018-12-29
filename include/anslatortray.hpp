@@ -49,9 +49,8 @@
 #include <cstdint>
 #include <algorithm>
 #include <cctype>
-//#include <iterator>
 //#include <cstring>
-//#include <sstream>
+//#include <iterator>
 
 
 /** \namespace anslatortray
@@ -239,44 +238,6 @@ namespace anslatortray
         return beginningConosoants + withoutBeginningConosoants;
     }
 
-#if __cplusplus >= 201402L
-    /*
-    //futile attempt at compile time translation
-    constexpr char *wordToPig(char *englishWord)
-    {
-        auto wordSize {std::strlen(englishWord)};
-
-
-        auto result {std::find_first_of(englishWord[0], englishWord[wordSize], Characters::Letters::VOWELS_WITH_Y[0], Characters::Letters::VOWELS_WITH_Y[std::strlen(Characters::Letters::VOWELS_WITH_Y)])};
-
-        std::cout << result << std::endl;
-
-        if (result != '\n')
-        {
-            if (result == 0)
-                return std::strcat(englishWord, "way");
-            else
-            {
-                //std::string noPrefix {englishWord.substr(result)};
-
-                //std::string suffix {englishWord.substr(0, result)};
-
-                //suffix += {"ay"};
-
-                //std::string finished {noPrefix + suffix};
-
-                //std::transform(std::begin(finished), std::end(finished), std::begin(finished), tolower);
-
-                return englishWord;
-            }
-        }
-
-
-        return englishWord;
-    }
-    */
-#endif
-
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
     {
         std::string newWords {""};
@@ -309,17 +270,6 @@ namespace anslatortray
 
         //probably best way of doing it (if it worked)
         //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
-
-        /*old way, still works but stringstreams are much slower than raw find methods
-        std::stringstream wordStream {words};
-
-        while (wordStream >> word)//tokenize words
-        {
-            //preform wordChanger on each word and add space in between
-            newWords += {wordChanger(word)};
-            newWords += {" "};
-        }
-        */
     }
 }
 
