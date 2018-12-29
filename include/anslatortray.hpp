@@ -1,4 +1,4 @@
-/* Anslatortray 0.3.0
+/* Anslatortray 0.3.1
  *
  * A simple, header-only library to translate from English to Pig Latin.
  *
@@ -40,7 +40,7 @@
 #ifndef ANSLATORTRAY_HPP
 #define ANSLATORTRAY_HPP
 
-#define ANSLATORTRAY_VERSION 0.3.0
+#define ANSLATORTRAY_VERSION 0.3.1
 
 
 #if __cplusplus >= 201103L//supports C++11 and later for now
