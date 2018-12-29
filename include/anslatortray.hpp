@@ -168,8 +168,13 @@ namespace anslatortray
             wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//find the last letter in the string to use as ending
 
 
-        //extract it and translate
-        std::string actualWord = {englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)};//2nd param is count between start and end of actual word
+        //extract it and translate, sanity checking in the process
+        std::string actualWord {};
+        if (wordStartIndex != std::string::npos && wordEndIndex != std::string::npos)//make sure word is sane
+             actualWord = {englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)};//2nd param is count between start and end of actual word
+        else
+            return englishWord;//this sanity checking takes also care of the other englishWord.substr in the final assembly phase
+
         std::string pig {wordToPig(actualWord)};//translate English word
 
 
@@ -201,7 +206,7 @@ namespace anslatortray
     {
         const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS)};//fixme y being a vowel depends on word
 
-        if (firstVowel != std::string::npos)
+        if (firstVowel != std::string::npos)//basic sanity checking
         {
             if (firstVowel == 0)//word starts with vowel
                 return englishWord + VOWEL_START_STYLE;
