@@ -43,15 +43,15 @@
 #define ANSLATORTRAY_VERSION 0.3.0
 
 
-#if __cplusplus >= 201103L//supports C++11 and later
+#if __cplusplus >= 201103L//supports C++11 and later for now
 
 #include <string>
-#include <sstream>
 #include <cstdint>
 #include <algorithm>
 #include <cctype>
 //#include <iterator>
 //#include <cstring>
+//#include <sstream>
 
 
 /** \namespace anslatortray
@@ -142,6 +142,8 @@ namespace anslatortray//Definitions
 
         /**< Array containing diffrent apostrophes (internal use) */
         constexpr char APOSTROPHE[] {"\'"};//should also have ʼ and ’ but unicode does not play nice with std::string::find_last_of
+        /**< Array containing diffrent types of whitespace (internal use) */
+        constexpr char WHITESPACE[] {" \t\v\n\r\f"};
     }
 
     /** \brief Helper function to perform an operation on all whitespace-seperated strings given to it.
@@ -272,35 +274,60 @@ namespace anslatortray
 
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
     {
-        std::stringstream wordStream {words};
-        std::string pigWords {""};
-
+        std::string newWords {""};
         std::string word {""};
+
+        std::string::size_type tokenStartIndex {words.find_first_not_of(Characters::WHITESPACE)};
+        std::string::size_type tokenEndIndex {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};
+
+        while (tokenStartIndex != std::string::npos)//no more things to tokenize
+        {
+            //tokenize
+            if (tokenEndIndex == std::string::npos)//if there is no more white space (last token in string)
+                word = {words.substr(tokenStartIndex)};//tokenize from last whitespace to end of string
+            else
+                word = {words.substr(tokenStartIndex, tokenEndIndex)};//tokenize between last and next whitespace
+
+
+            //preform wordChanger on each word and add space in between
+            newWords += {wordChanger(word)};
+            newWords += {" "};
+
+
+            //find placement of next token
+            tokenStartIndex = {words.find_first_not_of(Characters::WHITESPACE, tokenEndIndex)};//find the next start of a token after whitespace
+            tokenEndIndex = {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};//fin the next whitespace after start of token
+        }
+
+        return newWords;
+
+
+        //probably best way of doing it (if it worked)
+        //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
+
+        /*old way, still works but stringstreams are much slower than raw find methods
+        std::stringstream wordStream {words};
 
         while (wordStream >> word)//tokenize words
         {
             //preform wordChanger on each word and add space in between
-            pigWords += {wordChanger(word)};
-            pigWords += {" "};
+            newWords += {wordChanger(word)};
+            newWords += {" "};
         }
-
-        return pigWords;
-
-
-        //best way of doing it (if it worked)
-        //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
+        */
 
 
-        //not worth the hassle
-        //for (auto word : std::istream_iterator<std::string>{wordStream})
-        //{
-        //    pigWords += wordToPig(word);
-        //}
+        /* not worth the hassle of setting up a range
+        for (auto word : std::istream_iterator<std::string>{wordStream})
+        {
+            pigWords += wordToPig(word);
+        }
+        */
     }
 }
 
 #else
-#error At the moment, Anslatortray only has support for C++11 and later. Please change your compiliation flags accordinaly
+#error Sorry, but for the moment, Anslatortray only supports for C++11 and later. For now, please change your compiliation flags accordinaly
 #endif
 
 #endif //ANSLATORTRAY_HPP
