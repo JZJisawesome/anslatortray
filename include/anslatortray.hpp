@@ -225,8 +225,8 @@ namespace anslatortray
             {
                 //word without beginning consononts + beginning consononts + "ay"
                 std::string result {englishWord.substr(firstVowel)};
-                result += englishWord.substr(0, firstVowel);
-                result += "ay";
+                result += {englishWord.substr(0, firstVowel)};
+                result += {"ay"};
 
                 return result;
             }
@@ -252,19 +252,19 @@ namespace anslatortray
 
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
     {
-        std::string newWords {""};
-        std::string word {""};
+        std::string newWords {};
+        std::string word {};
 
-        std::string::size_type tokenStartIndex {words.find_first_not_of(Characters::WHITESPACE)};
-        std::string::size_type tokenEndIndex {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};
+        std::string::size_type tokenStartIndex {words.find_first_not_of(Characters::WHITESPACE)};//start of token
+        std::string::size_type tokenEndIndex {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};//first whitespace after token
 
         while (tokenStartIndex != std::string::npos)//no more things to tokenize
         {
             //tokenize
             if (tokenEndIndex == std::string::npos)//if there is no more white space (last token in string)
                 word = {words.substr(tokenStartIndex)};//tokenize from last whitespace to end of string
-            else
-                word = {words.substr(tokenStartIndex, tokenEndIndex - tokenStartIndex)};//tokenize between start of token the and next found whitespace (2nd param is count between the two)
+            else//tokenize between start of token the and next found whitespace (2nd param is count between the two)
+                word = {words.substr(tokenStartIndex, tokenEndIndex - tokenStartIndex)};
 
 
             //preform wordChanger on each word and add space in between
