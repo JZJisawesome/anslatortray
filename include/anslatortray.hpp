@@ -1,6 +1,6 @@
 /** \mainpage
  *
-** \section welcome_sec Anslatortray 0.3.1
+** \section welcome_sec Anslatortray 0.3.2
  *
  * Welcome to the Anslatortray Documentation!
  *
@@ -58,7 +58,7 @@
 #ifndef ANSLATORTRAY_HPP
 #define ANSLATORTRAY_HPP
 
-#define ANSLATORTRAY_VERSION 0.3.1
+#define ANSLATORTRAY_VERSION 0.3.2
 
 
 #if __cplusplus >= 201103L//supports C++11 and later for now
