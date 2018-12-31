@@ -69,7 +69,6 @@
 #include <cctype>
 //#include <cstring>
 //#include <iterator>
-#include <sstream>
 
 
 /** \namespace anslatortray
@@ -256,7 +255,6 @@ namespace anslatortray
         std::string newWords {""};
         std::string word {""};
 
-        /*//dang it it's broken i really wish it wasent but ok i guess
         std::string::size_type tokenStartIndex {words.find_first_not_of(Characters::WHITESPACE)};
         std::string::size_type tokenEndIndex {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};
 
@@ -266,7 +264,7 @@ namespace anslatortray
             if (tokenEndIndex == std::string::npos)//if there is no more white space (last token in string)
                 word = {words.substr(tokenStartIndex)};//tokenize from last whitespace to end of string
             else
-                word = {words.substr(tokenStartIndex, tokenEndIndex)};//tokenize between start of token the and next found whitespace
+                word = {words.substr(tokenStartIndex, tokenEndIndex - tokenStartIndex)};//tokenize between start of token the and next found whitespace (2nd param is count between the two)
 
 
             //preform wordChanger on each word and add space in between
@@ -277,15 +275,6 @@ namespace anslatortray
             //find placement of next token
             tokenStartIndex = {words.find_first_not_of(Characters::WHITESPACE, tokenEndIndex)};//find the next start of a token after whitespace
             tokenEndIndex = {words.find_first_of(Characters::WHITESPACE, tokenStartIndex)};//fin the next whitespace after start of token
-        }
-        */
-
-        std::stringstream wordStream {words};
-
-        while (wordStream >> word)//tokenize words
-        {
-            newWords += {wordChanger(word)};
-            newWords += {" "};
         }
 
         return newWords;
