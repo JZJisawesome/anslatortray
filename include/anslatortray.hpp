@@ -63,6 +63,15 @@
 
 #if __cplusplus >= 201103L//supports C++11 and later for now
 
+//Behavior changing definitions
+
+//decent speed boost sacrifising replication of capital letters in translated word in smartWordToPig
+//#define IGNORE_CAPS
+
+//very small speed boost sacrifising sanity checking; words without vowels/letters will cause problems
+//#define SKIP_SANITY_CHECKS
+
+
 #include <string>
 #include <cstdint>
 #include <algorithm>
@@ -80,7 +89,9 @@ namespace anslatortray//Definitions
     //External Use
     /** \brief Translates a single complex English word to Pig Latin. (more robust)
      *
-     * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.\n
+     * Unlike wordToPig, this function also handles punctuation (not seperated by wh
+
+itespace), singular possesion ('s) and creates similar capatilization to the original english word (unless disabled by defining IGNORE_CAPS).\n
      * Imperfect results with plural words (ending in "s") and words with mutiple possesion (ending in "s'")
      *
      * \param englishWord An English word to translate
@@ -179,17 +190,20 @@ namespace anslatortray
             wordEndIndex = {englishWord.find_last_of(Characters::Letters::ALL) + 1};//find the last letter in the string to use as ending
 
 
-        //extract it and translate, sanity checking in the process
-        std::string actualWord {};
-        if (wordStartIndex != std::string::npos && wordEndIndex != std::string::npos)//make sure word is sane
-             actualWord = {englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)};//2nd param is count between start and end of actual word
-        else
-            return englishWord;//this sanity checking takes also care of the other englishWord.substr in the final assembly phase
+        //sanity check
+        #ifndef SKIP_SANITY_CHECKS
+        if (wordStartIndex == std::string::npos || wordEndIndex == std::string::npos)//make sure word indexes are sane
+            return englishWord;//if not, return original word as there are no letters
+        #endif
 
+
+        //extract word and translate
+        std::string actualWord {englishWord.substr(wordStartIndex, wordEndIndex - wordStartIndex)};//2nd param is count between start and end of actual word
         std::string pig {wordToPig(actualWord)};//translate English word
 
 
         //capatilization handeling
+        #ifndef IGNORE_CAPS
         if (std::all_of(std::begin(actualWord), std::end(actualWord), isupper) && actualWord != "I")//if entire original word was uppercase (except for the word "I")//fixme why no std::toupper
             std::transform(std::begin(pig), std::end(pig), std::begin(pig), toupper);//make entire translated word uppercase
         else
@@ -199,7 +213,7 @@ namespace anslatortray
             if (std::isupper(actualWord[0]))//if original word had an uppercase first letter
                 pig[0] = {static_cast<char> (std::toupper(pig[0]))};//new word should have uppercase first letter; have to cast int to char
         }
-
+        #endif
 
         //prefix punctuation + pigified word + suffix punctuation
         std::string result {englishWord.substr(0, wordStartIndex)};//up to the start of the word
@@ -217,22 +231,23 @@ namespace anslatortray
     {
         const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS)};//fixme y being a vowel depends on word
 
-        if (firstVowel != std::string::npos)//basic sanity checking
+        #ifndef SKIP_SANITY_CHECKS
+        if (firstVowel == std::string::npos)//basic sanity checking
+            return englishWord;
+        #endif
+
+
+        if (firstVowel == 0)//word starts with vowel
+            return englishWord + VOWEL_START_STYLE;//just add "way" (or something else)//note, += has little to no benifit here
+        else
         {
-            if (firstVowel == 0)//word starts with vowel
-                return englishWord + VOWEL_START_STYLE;//just add "way" (or something else)
-            else
-            {
-                //word without beginning consononts + beginning consononts + "ay"
-                std::string result {englishWord.substr(firstVowel)};
-                result += {englishWord.substr(0, firstVowel)};
-                result += {"ay"};
+            //word without beginning consononts + beginning consononts + "ay"
+            std::string result {englishWord.substr(firstVowel)};
+            result += {englishWord.substr(0, firstVowel)};
+            result += {"ay"};
 
-                return result;
-            }
+            return result;
         }
-
-        return englishWord;
     }
 
     std::string wordsToPig(const std::string &englishWords)
@@ -242,7 +257,7 @@ namespace anslatortray
 
     std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants)
     {
-        std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay
+        std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay (2 characters)
 
         std::string withoutBeginningConosoants {noAy.substr(0, noAy.size() - numBeginningConosoants)};//take rest of word from front
         std::string beginningConosoants {noAy.substr(noAy.size() - numBeginningConosoants)};//take beginning conosoants from the end
