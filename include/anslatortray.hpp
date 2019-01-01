@@ -27,7 +27,7 @@
  * \endcode
  *
  *
-** <h3> Anslatortray Licence </h3>
+** <h3> Anslatortray Code and Documentation Licence </h3>
  *
  * MIT License
  *
@@ -58,20 +58,10 @@
 #ifndef ANSLATORTRAY_HPP
 #define ANSLATORTRAY_HPP
 
-#define ANSLATORTRAY_VERSION 0.3.2
-
-
 #if __cplusplus >= 201103L//supports C++11 and later for now
 
-//Behavior changing definitions
 
-//decent speed boost sacrifising replication of capital letters in translated word in smartWordToPig
-//#define IGNORE_CAPS
-
-//very small speed boost sacrifising sanity checking; words without vowels/letters will cause problems
-//#define SKIP_SANITY_CHECKS
-
-
+//Headers
 #include <string>
 #include <cstdint>
 #include <algorithm>
@@ -80,18 +70,34 @@
 //#include <iterator>
 
 
+#define ANSLATORTRAY_VERSION 0.3.2
+
 /** \namespace anslatortray
  *
  * \brief Namespace containing functions to translate from English to Pig Latin.
 */
-namespace anslatortray//Definitions
+namespace anslatortray {}
+
+
+//Behavior changing definitions (safe to change)
+
+//decent speed boost sacrifising replication of capital letters in translated word in smartWordToPig; recomended based on needs
+//#define ANSLATORTRAY_IGNORE_CAPS
+
+//extremly small speed boost sacrifising sanity checking; words without vowels/letters will cause problems; not recomended unless speed despratly needed needed
+//#define ANSLATORTRAY_SKIP_SANITY_CHECKS
+
+//disables uncommonly used functions and other unnecerary things to reduce memory/binary footprints; does little that is actually worth it
+//#define ANSLATORTRAY_TINY_TRANSLATOR
+
+
+//Definitions
+namespace anslatortray
 {
     //External Use
     /** \brief Translates a single complex English word to Pig Latin. (more robust)
      *
-     * Unlike wordToPig, this function also handles punctuation (not seperated by wh
-
-itespace), singular possesion ('s) and creates similar capatilization to the original english word (unless disabled by defining IGNORE_CAPS).\n
+     * Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and creates similar capatilization to the original english word (unless disabled by defining ANSLATORTRAY_IGNORE_CAPS).\n
      * Imperfect results with plural words (ending in "s") and words with mutiple possesion (ending in "s'")
      *
      * \param englishWord An English word to translate
@@ -118,24 +124,30 @@ itespace), singular possesion ('s) and creates similar capatilization to the ori
      */
     inline std::string wordToPig(const std::string &englishWord);
 
+    #ifndef ANSLATORTRAY_TINY_TRANSLATOR
     /** \brief Uses wordToPig and changeWords to perform dumb translation from English to Pig Latin on every word it is given.
      *
-     * Replaces all whitespace with a regular space.
+     * Replaces all whitespace with a regular space.\n
+     * Disabled by defining ANSLATORTRAY_TINY_TRANSLATOR
      *
      * \param englishWords The original English text
      * \return The text "translated" to Pig Latin (no punctuation, uppercase, or possesion support)
     */
     inline std::string wordsToPig(const std::string &englishWords);
+    #endif
 
-    /** \brief Tries to translate a word in Pig Latin back to english.
+    #ifndef ANSLATORTRAY_TINY_TRANSLATOR
+    /** \brief Tries to translate a word in Pig Latin back to English.
      *
-     * This is hard to do because diffrent English words can be the same in Pig Latin.
+     * This is hard to do because diffrent English words can be the same in Pig Latin.\n
+     * Disabled by defining ANSLATORTRAY_TINY_TRANSLATOR
      *
      * \param pig Word in Pig Latin
      * \param numBeginningConosoants The number of conosonants before the first vowel in the original word. Default 1 (most common)
      * \return Word in English
      */
     inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants = 1);
+    #endif
 
     /** \brief Ending to use if word to translate starts with a vowel */
     constexpr char VOWEL_START_STYLE[] = {"way"};//sometimes "yay" is used
@@ -153,10 +165,13 @@ itespace), singular possesion ('s) and creates similar capatilization to the ori
 
             /** \brief Array containing all upper and lower case vowels (except for y) (internal use) */
             constexpr char VOWELS[] {"aAeEiIoOuU"};
+
+            #ifndef ANSLATORTRAY_TINY_TRANSLATOR
             /** \brief Array containing all upper and lower case vowels (including y) (internal use) */
             constexpr char VOWELS_WITH_Y[] {"aAeEiIoOuUyY"};
             /** \brief Array containing upper and lower case y (internal use) */
             constexpr char Y[] {"yY"};
+            #endif
         }
 
         /** \brief Array containing diffrent apostrophes (internal use) */
@@ -191,7 +206,7 @@ namespace anslatortray
 
 
         //sanity check
-        #ifndef SKIP_SANITY_CHECKS
+        #ifndef ANSLATORTRAY_SKIP_SANITY_CHECKS
         if (wordStartIndex == std::string::npos || wordEndIndex == std::string::npos)//make sure word indexes are sane
             return englishWord;//if not, return original word as there are no letters
         #endif
@@ -203,7 +218,7 @@ namespace anslatortray
 
 
         //capatilization handeling
-        #ifndef IGNORE_CAPS
+        #ifndef ANSLATORTRAY_IGNORE_CAPS
         if (std::all_of(std::begin(actualWord), std::end(actualWord), isupper) && actualWord != "I")//if entire original word was uppercase (except for the word "I")//fixme why no std::toupper
             std::transform(std::begin(pig), std::end(pig), std::begin(pig), toupper);//make entire translated word uppercase
         else
@@ -231,7 +246,7 @@ namespace anslatortray
     {
         const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS)};//fixme y being a vowel depends on word
 
-        #ifndef SKIP_SANITY_CHECKS
+        #ifndef ANSLATORTRAY_SKIP_SANITY_CHECKS
         if (firstVowel == std::string::npos)//basic sanity checking
             return englishWord;
         #endif
@@ -250,11 +265,14 @@ namespace anslatortray
         }
     }
 
+    #ifndef ANSLATORTRAY_TINY_TRANSLATOR
     std::string wordsToPig(const std::string &englishWords)
     {
         return changeWords(englishWords, wordToPig);
     }
+    #endif
 
+    #ifndef ANSLATORTRAY_TINY_TRANSLATOR
     std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants)
     {
         std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay (2 characters)
@@ -264,6 +282,7 @@ namespace anslatortray
 
         return beginningConosoants + withoutBeginningConosoants;//put back in proper order
     }
+    #endif
 
     std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
     {
