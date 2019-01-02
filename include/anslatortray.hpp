@@ -193,7 +193,7 @@ namespace anslatortray//Definitions
 /* Implementations */
 namespace anslatortray
 {
-    std::string smartWordToPig(const std::string &englishWord)
+    inline std::string smartWordToPig(const std::string &englishWord)
     {
         //find the start of the actual word in the string
         std::string::size_type wordStartIndex {englishWord.find_first_of(Characters::Letters::ALL)};//after any beginning punctuation
@@ -235,12 +235,12 @@ namespace anslatortray
         return result;
     }
 
-    std::string translate(const std::string &englishText)
+    inline std::string translate(const std::string &englishText)
     {
         return changeWords(englishText, smartWordToPig);
     }
 
-    std::string wordToPig(const std::string &englishWord)
+    inline std::string wordToPig(const std::string &englishWord)
     {
         const std::string::size_type firstVowel {englishWord.find_first_of(Characters::Letters::VOWELS)};//fixme y being a vowel depends on word
 
@@ -264,14 +264,14 @@ namespace anslatortray
     }
 
     #ifndef ANSLATORTRAY_TINY_TRANSLATOR
-    std::string wordsToPig(const std::string &englishWords)
+    inline std::string wordsToPig(const std::string &englishWords)
     {
         return changeWords(englishWords, wordToPig);
     }
     #endif
 
     #ifndef ANSLATORTRAY_TINY_TRANSLATOR
-    std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants)
+    inline std::string attemptWordToEnglish(const std::string &pig, std::uint64_t numBeginningConosoants)
     {
         std::string noAy {pig.substr(0, pig.size() - 2)};//try to take off ay (2 characters)
 
@@ -282,7 +282,7 @@ namespace anslatortray
     }
     #endif
 
-    std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
+    inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word))
     {
         std::string newWords {};
         std::string word {};
