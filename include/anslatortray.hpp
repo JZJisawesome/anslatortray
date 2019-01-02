@@ -1,6 +1,6 @@
 /** \mainpage
  *
-** \section welcome_sec Anslatortray 0.3.2
+** \section welcome_sec Anslatortray 0.3.3
  *
  * Welcome to the Anslatortray Documentation!
  *
@@ -8,12 +8,12 @@
  *
  * <a href="https://github.com/JZJisawesome/anslatortray">Anslatortray Github Repository</a>.
  *
- * <a href="hhttps://en.wikipedia.org/wiki/Pig_Latin">Wikipedia's definition</a> of Pig Latin is "a language game in which words in English are altered, usually by adding a fabricated suffix or by moving the onset or initial consonant or consonant cluster of a word to the end of the word and adding a vocalic syllable to create such a suffix."
+ * <a href="https://en.wikipedia.org/wiki/Pig_Latin">Wikipedia's definition</a> of Pig Latin is "a language game in which words in English are altered, usually by adding a fabricated suffix or by moving the onset or initial consonant or consonant cluster of a word to the end of the word and adding a vocalic syllable to create such a suffix."
  *
  * Essentially, the word is reorganized in an effort to hide its true meaning, which can be lots of fun!
- * The Anslatortray library can help out by converting any English text into Pig Latin quickly and easily
+ * The Anslatortray library can help out by converting any English text into Pig Latin quickly and easily.
  *
- * Try compiling this example code (with C++11)
+ * Try compiling this example code (with C++11):
  *
  * \code
  * #include "anslatortray.hpp"
@@ -31,7 +31,7 @@
  *
  * MIT License
  *
- * Copyright (c) 2018 John Jekel
+ * Copyright (c) 2018-2019 John Jekel
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
-
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -52,7 +52,7 @@
  * SOFTWARE.
  *
  * \author John Jekel
- * \date 2018
+ * \date 2018-2019
  * \copyright <a href="https://raw.githubusercontent.com/JZJisawesome/anslatortray/master/LICENSE">MIT Licence</a>
  */
 #ifndef ANSLATORTRAY_HPP
@@ -70,7 +70,7 @@
 //#include <iterator>
 
 
-#define ANSLATORTRAY_VERSION 0.3.2
+#define ANSLATORTRAY_VERSION 0.3.3
 
 /** \namespace anslatortray
  *

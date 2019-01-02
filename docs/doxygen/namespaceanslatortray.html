@@ -112,7 +112,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a85d2c30ac3cdffc60747db717e9f4e95"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses wordToPig and changeWords to perform dumb translation from English to Pig Latin on every word it is given.  <a href="#a85d2c30ac3cdffc60747db717e9f4e95">More...</a><br /></td></tr>
 <tr class="separator:a85d2c30ac3cdffc60747db717e9f4e95"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9e9ee1f1daab71310596091af5b5b9f7"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#a9e9ee1f1daab71310596091af5b5b9f7">attemptWordToEnglish</a> (const std::string &amp;pig, std::uint64_t numBeginningConosoants=1)</td></tr>
-<tr class="memdesc:a9e9ee1f1daab71310596091af5b5b9f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to translate a word in Pig Latin back to english.  <a href="#a9e9ee1f1daab71310596091af5b5b9f7">More...</a><br /></td></tr>
+<tr class="memdesc:a9e9ee1f1daab71310596091af5b5b9f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to translate a word in Pig Latin back to English.  <a href="#a9e9ee1f1daab71310596091af5b5b9f7">More...</a><br /></td></tr>
 <tr class="separator:a9e9ee1f1daab71310596091af5b5b9f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aace2395685773a102397d0e6d5f71869"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceanslatortray.html#aace2395685773a102397d0e6d5f71869">changeWords</a> (const std::string &amp;words, std::string wordChanger(const std::string &amp;word))</td></tr>
 <tr class="memdesc:aace2395685773a102397d0e6d5f71869"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper function to perform an operation on all whitespace-seperated words (tokens) given to it.  <a href="#aace2395685773a102397d0e6d5f71869">More...</a><br /></td></tr>
@@ -161,8 +161,9 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Tries to translate a word in Pig Latin back to english. </p>
-<p>This is hard to do because diffrent English words can be the same in Pig Latin.</p>
+<p>Tries to translate a word in Pig Latin back to English. </p>
+<p>This is hard to do because diffrent English words can be the same in Pig Latin.<br />
+Disabled by defining ANSLATORTRAY_TINY_TRANSLATOR</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">pig</td><td>Word in Pig Latin </td></tr>
@@ -246,7 +247,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Translates a single complex English word to Pig Latin. (more robust) </p>
-<p>Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and capatilizes the first letter if the original english word was capatilized.<br />
+<p>Unlike wordToPig, this function also handles punctuation (not seperated by whitespace), singular possesion ('s) and creates similar capatilization to the original english word (unless disabled by defining ANSLATORTRAY_IGNORE_CAPS).<br />
 Imperfect results with plural words (ending in "s") and words with mutiple possesion (ending in "s'")</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -319,7 +320,8 @@ Imperfect results with plural words (ending in "s") and words with mutiple posse
 </div><div class="memdoc">
 
 <p>Uses wordToPig and changeWords to perform dumb translation from English to Pig Latin on every word it is given. </p>
-<p>Replaces all whitespace with a regular space.</p>
+<p>Replaces all whitespace with a regular space.<br />
+Disabled by defining ANSLATORTRAY_TINY_TRANSLATOR</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">englishWords</td><td>The original English text </td></tr>
@@ -389,7 +391,7 @@ Imperfect results with plural words (ending in "s") and words with mutiple posse
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="namespaceanslatortray.html">anslatortray</a></li>
-    <li class="footer">Generated on Mon Dec 31 2018 12:48:48 for Anslatortray by
+    <li class="footer">Generated on Tue Jan 1 2019 23:12:13 for Anslatortray by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.13 </li>
   </ul>
