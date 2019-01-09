@@ -151,6 +151,12 @@ namespace anslatortray//Definitions
     #endif
 
 
+    namespace CompileTime
+    {
+        inline constexpr char* wordToPig(const char* englishWord);
+    }
+
+
     /* Internal use definitions */
     /** \brief Arrays of diffrent characters (internal use) */
     namespace Characters
@@ -187,6 +193,14 @@ namespace anslatortray//Definitions
      * \return Words fed through wordChanger with spaces between them
      */
     inline std::string changeWords(const std::string &words, std::string wordChanger (const std::string &word));
+
+    namespace CompileTime
+    {
+        namespace Internal
+        {
+            inline bool startsWithVowel(const char * word);
+        }
+    }
 }
 
 
@@ -313,6 +327,20 @@ namespace anslatortray
 
         //probably best way of doing it (if it worked)
         //std::transform(std::istream_iterator<std::string> {wordStream}, {}, std::begin(pigWords), [](std::string word){return wordToPig(word);});
+    }
+
+    namespace CompileTime
+    {
+        /*
+        inline constexpr char* wordToPig(const char* englishWord)
+        {
+
+        }
+        */
+
+        namespace Internal
+        {
+        }
     }
 }
 
